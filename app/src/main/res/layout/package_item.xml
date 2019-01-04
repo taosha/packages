@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dp"
+    android:paddingTop="4dp"
+    android:paddingRight="8dp"
+    android:paddingBottom="4dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        tools:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/icon"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        tools:text="Camera" />
+
+    <TextView
+        android:id="@+id/appId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@+id/icon"
+        android:layout_toRightOf="@+id/icon"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        tools:text="com.google.camera" />
+</RelativeLayout>
