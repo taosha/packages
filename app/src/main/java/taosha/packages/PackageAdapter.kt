@@ -13,9 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.package_item.view.*
+import taosha.loader.Icons
 
-class PackageAdapter(context: Context) : RecyclerView.Adapter<PackageViewHolder>() {
-    private val context: Context = context
+class PackageAdapter(val context: Context) : RecyclerView.Adapter<PackageViewHolder>() {
     private var list: MutableList<ResolveInfo>? = null
     private var queryResult: List<ResolveInfo>? = null
     private var q: String? = null
@@ -62,6 +62,7 @@ class PackageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val context: Context = itemView.context
 
     fun render(info: ResolveInfo, q: String?) {
+        Icons.with(context).load(info).into(itemView.icon)
         itemView.icon.setImageDrawable(info.loadIcon(context.packageManager))
         itemView.name.text = highlight(info.loadLabel(context.packageManager).toString(), q)
         itemView.appId.text = highlight(info.activityInfo.packageName, q)
@@ -86,3 +87,4 @@ class PackageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         return builder
     }
 }
+

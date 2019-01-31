@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Packages</string>
-    <string name="search_hint">Search app names, packages</string>
+  <string name="app_name">Packages</string>
+  <string name="search_hint">Search app names, packages</string>
 </resources>
