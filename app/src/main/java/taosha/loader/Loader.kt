@@ -1,9 +1,11 @@
 package taosha.loader
 
-interface Loader<T> {
-    fun into(target: T)
+import android.view.View
+
+interface Loader<Result> {
+    fun <Target : View> into(target: Target, resolve: (Target, Result?) -> Unit)
 }
 
-interface LoaderResolver<K, T> {
-    fun load(k: K): Loader<T>
+interface LoaderProvider<Param, Result> {
+    fun load(param: Param): Loader<Result>
 }

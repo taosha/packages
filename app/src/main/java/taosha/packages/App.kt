@@ -1,7 +1,7 @@
 package taosha.packages
 
 import android.app.Application
-import taosha.loader.Icons
+import taosha.loader.Packages
 
 class App : Application() {
     override fun onTrimMemory(level: Int) {
@@ -9,12 +9,12 @@ class App : Application() {
         when (level) {
             TRIM_MEMORY_RUNNING_MODERATE,
             TRIM_MEMORY_RUNNING_LOW ->
-                Icons.trimCache(Icons.TRIM_LOW)
+                Packages.trimCache(Packages.TRIM_LOW)
             TRIM_MEMORY_RUNNING_CRITICAL,
             TRIM_MEMORY_UI_HIDDEN ->
-                Icons.trimCache(Icons.TRIM_CRITICAL)
+                Packages.trimCache(Packages.TRIM_CRITICAL)
             else ->
-                Icons.trimCache(Icons.TRIM_ALL)
+                Packages.trimCache(Packages.TRIM_ALL)
         }
     }
 }

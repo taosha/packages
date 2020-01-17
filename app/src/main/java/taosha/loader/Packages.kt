@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
-import android.widget.ImageView
 import androidx.annotation.IntDef
 import androidx.collection.LruCache
 import taosha.packages.R
@@ -12,7 +11,9 @@ import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-object Icons {
+data class PackageData(val icon: Drawable, val label: CharSequence, val packageName: String)
+
+object Packages {
     const val TRIM_LOW = 0
     const val TRIM_CRITICAL = 1
     const val TRIM_ALL = 2
@@ -29,36 +30,34 @@ object Icons {
         }
     }
     private lateinit var pm: PackageManager
-    private lateinit var cache: LruCache<ResolveInfo, Drawable>
+    private lateinit var cache: LruCache<ResolveInfo, PackageData>
 
     private fun init(context: Context) {
-        pm = context.applicationContext.packageManager
-        cache = object : LruCache<ResolveInfo, Drawable>(200) {
-            override fun create(key: ResolveInfo): Drawable = key.loadIcon(pm)
+        pm = context.packageManager
+        cache = object : LruCache<ResolveInfo, PackageData>(200) {
+            override fun create(key: ResolveInfo): PackageData =
+                PackageData(key.loadIcon(pm), key.loadLabel(pm), key.activityInfo.packageName)
         }
     }
 
-    fun with(context: Context): LoaderResolver<ResolveInfo, ImageView> {
-        val applicationContext = context.applicationContext
-        if (!Icons::pm.isInitialized) {
+    fun with(context: Context): LoaderProvider<ResolveInfo, PackageData> {
+        if (!Packages::pm.isInitialized) {
             synchronized(this) {
-                if (!Icons::pm.isInitialized) {
-                    init(applicationContext)
+                if (!Packages::pm.isInitialized) {
+                    init(context.applicationContext)
                 }
             }
         }
-        return object : LoaderResolver<ResolveInfo, ImageView> {
-            override fun load(k: ResolveInfo): Loader<ImageView> =
-                AsyncViewLoader(
+        return object : LoaderProvider<ResolveInfo, PackageData> {
+            override fun load(param: ResolveInfo): Loader<PackageData> =
+                AsyncLoader(
+                    executor = executor,
                     tag = R.id.tag_loader,
-                    k = k,
-                    create = cache::get,
-                    resolve = ImageView::setImageDrawable,
-                    executor = executor
+                    param = param,
+                    load = cache::get
                 )
         }
     }
-
 
     fun trimCache(@TrimLevel level: Int) {
         when (level) {
@@ -78,5 +77,6 @@ object Icons {
     )
     annotation class TrimLevel
 }
+
 
 
