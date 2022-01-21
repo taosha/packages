@@ -1,15 +1,17 @@
 <resources>
 
-  <style name="Theme.Taosha" parent="ThemeOverlay.MaterialComponents.Light">
-    <item name="colorPrimaryDark">@color/primary_dark_material_light</item>
-    <item name="colorPrimary">@color/primary_material_light</item>
-    <item name="colorAccent">@color/accent_material_light</item>
-  </style>
+    <style name="Theme.Taosha" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="colorPrimaryDark">?colorPrimary</item>
+        <item name="colorPrimary">#445BA4</item>
+    </style>
 
-  <style name="Theme.Taosha.NoActionBar" parent="Theme.MaterialComponents.Light.NoActionBar">
-    <item name="colorPrimaryDark">@color/primary_dark_material_light</item>
-    <item name="colorPrimary">@color/primary_material_light</item>
-    <item name="colorAccent">@color/accent_material_light</item>
-  </style>
+    <style name="ThemeOverlay.Taosha" parent="ThemeOverlay.Material3.DynamicColors.DayNight">
+        <item name="colorPrimaryDark">?colorPrimary</item>
+        <item name="colorPrimary">#445BA4</item>
+    </style>
 
+    <style name="Theme.Taosha.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

@@ -5,39 +5,39 @@
   android:layout_height="wrap_content"
   android:paddingLeft="16dp"
   android:paddingRight="16dp"
-  android:paddingTop="6dp"
-  android:paddingBottom="6dp"
+  android:paddingTop="8dp"
+  android:paddingBottom="8dp"
   android:background="?selectableItemBackground">
 
   <ImageView
-    android:id="@+id/icon"
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:layout_centerVertical="true"
-    tools:src="@mipmap/ic_launcher" />
+      android:id="@+id/icon"
+      android:layout_width="40dp"
+      android:layout_height="40dp"
+      android:layout_centerVertical="true"
+      tools:src="@tools:sample/avatars" />
 
   <TextView
-    android:id="@+id/name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignTop="@+id/icon"
-    android:layout_marginStart="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_toEndOf="@+id/icon"
-    android:layout_toRightOf="@+id/icon"
-    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-    tools:text="Camera" />
+      android:id="@+id/name"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignTop="@+id/icon"
+      android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_toEndOf="@+id/icon"
+      android:layout_toRightOf="@+id/icon"
+      android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+      tools:text="@tools:sample/cities" />
 
   <TextView
-    android:id="@+id/appId"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/name"
-    android:layout_marginStart="10dp"
-    android:layout_marginLeft="10dp"
-    android:layout_toEndOf="@+id/icon"
-    android:layout_toRightOf="@+id/icon"
-    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-    tools:text="com.google.camera" />
+      android:id="@+id/appId"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/name"
+      android:layout_marginStart="10dp"
+      android:layout_marginLeft="10dp"
+      android:layout_toEndOf="@+id/icon"
+      android:layout_toRightOf="@+id/icon"
+      android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+      tools:text="com.google.camera" />
 
 </RelativeLayout>
