@@ -1,4 +1,4 @@
-package taosha.loader
+package packages.loader
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -6,7 +6,7 @@ import android.content.pm.ResolveInfo
 import android.graphics.drawable.Drawable
 import androidx.annotation.IntDef
 import androidx.collection.LruCache
-import taosha.packages.R
+import packages.R
 import java.util.concurrent.SynchronousQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit

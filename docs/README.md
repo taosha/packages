@@ -1,6 +1,8 @@
 ## Install
 
-Install from [Google Play Store](https://play.google.com/store/apps/details?id=io.github.taosha.packages) or download it [here](https://github.com/taosha/packages/releases/)
+Install
+from [Google Play Store](https://play.google.com/store/apps/details?id=io.github.taosha.packages) or
+download it [here](https://github.com/taosha/packages/releases/)
 
 ## Screenshots
 

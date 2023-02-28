@@ -1,39 +1,29 @@
-package taosha.packages
+package packages
 
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.graphics.Color
+import android.graphics.Typeface
+import android.os.Build
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
+import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ShareCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import taosha.loader.Packages
-import taosha.packages.databinding.PackageItemBinding
+import packages.databinding.PackageItemBinding
+import packages.loader.Packages
 import java.util.*
 
-class AppInfoDiffCallback : DiffUtil.ItemCallback<ResolveInfo>() {
-    override fun areItemsTheSame(oldItem: ResolveInfo, newItem: ResolveInfo): Boolean {
-        return oldItem.activityInfo.packageName == newItem.activityInfo.packageName
-    }
-
-    override fun areContentsTheSame(oldItem: ResolveInfo, newItem: ResolveInfo): Boolean {
-        return oldItem.activityInfo.packageName == newItem.activityInfo.packageName
-    }
-
-    override fun getChangePayload(oldItem: ResolveInfo, newItem: ResolveInfo): Any {
-        return newItem
-    }
-}
 
 class PackageAdapter(private val context: Context) :
-    ListAdapter<ResolveInfo, PackageViewHolder>(AppInfoDiffCallback()) {
+    ListAdapter<PackageAdapter.Item, PackageViewHolder>(ItemDiffCallback()) {
 
     private var apps: List<ResolveInfo> = listOf()
     private var query: String? = null
@@ -51,13 +41,15 @@ class PackageAdapter(private val context: Context) :
     }
 
     private fun applyFilter() {
-        submitList(
+        val result =
             query?.trim()?.lowercase()?.let { q ->
                 apps.filter {
                     it.activityInfo.packageName.lowercase().contains(q)
                             || it.loadLabel(context.packageManager).contains(q)
                 }
             } ?: apps
+        submitList(
+            result.map { Item(it, query) }
         )
     }
 
@@ -73,13 +65,32 @@ class PackageAdapter(private val context: Context) :
 
     override fun onBindViewHolder(holder: PackageViewHolder, position: Int) {
         getItem(position)?.let {
-            holder.render(it, query)
+            holder.render(it.appInfo, query)
         }
     }
 
     fun setFilter(query: String?) {
         this.query = query
         applyFilter()
+    }
+
+    data class Item(
+        val appInfo: ResolveInfo,
+        val query: String? = null,
+    )
+
+    class ItemDiffCallback : DiffUtil.ItemCallback<Item>() {
+        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+            return oldItem.appInfo == newItem.appInfo
+        }
+
+        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun getChangePayload(oldItem: Item, newItem: Item): Any? {
+            return newItem.query
+        }
     }
 }
 
@@ -114,16 +125,27 @@ class PackageViewHolder(private val binding: PackageItemBinding) :
         if (TextUtils.isEmpty(highlighted))
             return text
 
-        val builder = SpannableStringBuilder()
-        builder.append(text)
+        val builder = SpannableStringBuilder(text)
         val h = highlighted!!.lowercase(Locale.getDefault())
         val s = text.lowercase(Locale.getDefault())
         var i = -1
         do {
-            val span = ForegroundColorSpan(Color.RED)
             i = s.indexOf(h, i + 1)
             if (i >= 0) {
-                builder.setSpan(span, i, i + h.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    builder.setSpan(
+                        TypefaceSpan(Typeface.DEFAULT_BOLD),
+                        i,
+                        i + h.length,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+                builder.setSpan(
+                    ForegroundColorSpan(Color.RED),
+                    i,
+                    i + h.length,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
         } while (i >= 0)
         return builder

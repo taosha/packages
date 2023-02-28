@@ -1,4 +1,5 @@
 <resources>
   <string name="app_name">Packages</string>
   <string name="search_hint">Search app names, packages</string>
+  <string name="item_app_icon">App icon</string>
 </resources>

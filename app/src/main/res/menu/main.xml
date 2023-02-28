@@ -5,5 +5,5 @@
     android:id="@+id/action_search"
     android:title="@android:string/search_go"
     app:actionViewClass="androidx.appcompat.widget.SearchView"
-    app:showAsAction="always"/>
+    app:showAsAction="always" />
 </menu>

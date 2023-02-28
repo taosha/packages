@@ -1,4 +1,4 @@
-package taosha.packages
+package packages
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,7 +14,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.WindowCompat
-import taosha.packages.databinding.ActivityMainBinding
+import packages.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -74,9 +74,9 @@ class MainActivity : AppCompatActivity() {
         registerReceiver(packageReceiver, filter)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main, menu)
-        val searchView = menu?.findItem(R.id.action_search)?.actionView as SearchView
+        val searchView = menu.findItem(R.id.action_search)?.actionView as SearchView
         searchView.queryHint = getText(R.string.search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {

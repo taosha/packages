@@ -1,14 +1,18 @@
-package taosha.packages
+package packages
 
 import android.app.Application
 import com.google.android.material.color.DynamicColors
-import taosha.loader.Packages
+import com.google.android.material.color.DynamicColorsOptions
+import packages.loader.Packages
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        DynamicColors.applyToActivitiesIfAvailable(this, R.style.ThemeOverlay_Taosha)
+        DynamicColors.applyToActivitiesIfAvailable(
+            this,
+            DynamicColorsOptions.Builder().setThemeOverlay(R.style.ThemeOverlay_Packages).build()
+        )
     }
 
     override fun onTrimMemory(level: Int) {

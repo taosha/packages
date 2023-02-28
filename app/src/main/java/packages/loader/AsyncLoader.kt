@@ -1,4 +1,4 @@
-package taosha.loader
+package packages.loader
 
 import android.os.AsyncTask
 import android.view.View
@@ -42,7 +42,7 @@ class AsyncLoader<Param, Result>(
         override fun onPostExecute(result: Result?) {
             val view = ref.get()
             if (view?.getTag(tag) == this) {
-                if (!isCancelled()) {
+                if (!isCancelled) {
                     resolve(view, result)
                 }
                 view.setTag(tag, null)
