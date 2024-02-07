@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     fun getColorFromAttr(
         @AttrRes attrColor: Int,
         typedValue: TypedValue = TypedValue(),
-        resolveRefs: Boolean = true
+        resolveRefs: Boolean = true,
     ): Int {
         theme.resolveAttribute(attrColor, typedValue, resolveRefs)
         return typedValue.data
@@ -52,11 +52,13 @@ class MainActivity : AppCompatActivity() {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
                 insetsController?.isAppearanceLightStatusBars =
                     !resources.configuration.isNightModeActive
-                window.statusBarColor = getColorFromAttr(R.attr.colorOnPrimary)
+                window.statusBarColor =
+                    getColorFromAttr(com.google.android.material.R.attr.colorOnPrimary)
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
                 insetsController?.isAppearanceLightStatusBars = !isNightMode()
-                window.statusBarColor = getColorFromAttr(R.attr.colorOnPrimary)
+                window.statusBarColor =
+                    getColorFromAttr(com.google.android.material.R.attr.colorOnPrimary)
             }
         }
 

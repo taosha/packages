@@ -1,9 +1,9 @@
 import com.android.build.api.dsl.ApkSigningConfig
-import java.util.*
+import java.util.Properties
 
 plugins {
-    id("com.android.application")
-    kotlin("android")
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.androidApplication)
 }
 
 fun File.normalizeUserHome(): File {
@@ -26,7 +26,7 @@ infix fun ApkSigningConfig.load(properties: File) {
 
 android {
     namespace = "packages"
-    compileSdk = 33
+    compileSdk = 34
     viewBinding {
         enable = true
     }
@@ -37,7 +37,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packagingOptions {
+    packaging {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
@@ -50,9 +50,9 @@ android {
     defaultConfig {
         applicationId = "io.github.taosha.packages"
         minSdk = 21
-        targetSdk = 33
-        versionCode = 15
-        versionName = "1.3.0"
+        targetSdk = 34
+        versionCode = 16
+        versionName = "1.4.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -75,10 +75,10 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("com.google.android.material:material:1.8.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.material)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
