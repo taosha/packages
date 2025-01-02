@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "packages"
-include(":app")
+rootProject.name = "packages-parent"
+include(":packages")
