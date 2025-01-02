@@ -26,7 +26,7 @@ infix fun ApkSigningConfig.load(properties: File) {
 
 android {
     namespace = "packages"
-    compileSdk = 34
+    compileSdk = 35
     viewBinding {
         enable = true
     }
@@ -50,9 +50,9 @@ android {
     defaultConfig {
         applicationId = "io.github.taosha.packages"
         minSdk = 21
-        targetSdk = 34
-        versionCode = 16
-        versionName = "1.4.0"
+        targetSdk = 35
+        versionCode = 17
+        versionName = "1.5.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
