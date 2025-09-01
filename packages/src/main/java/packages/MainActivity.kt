@@ -14,10 +14,18 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.launch
 import packages.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -48,20 +56,35 @@ class MainActivity : AppCompatActivity() {
             else -> false
         }
 
+    private val systemBarsInsetsFlow = MutableStateFlow(Insets.NONE)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val horizontalSpacing = resources.getDimensionPixelOffset(R.dimen.horizontal_edge_spacing)
-        val verticalSpacing = resources.getDimensionPixelOffset(R.dimen.vertical_edge_spacing)
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            binding.appbar.updatePadding(top = systemBars.top)
-            binding.recyclerView.updatePadding(
-                left = systemBars.left + horizontalSpacing,
-                right = systemBars.right + horizontalSpacing,
-                bottom = systemBars.bottom + verticalSpacing,
-            )
+            systemBarsInsetsFlow.value = systemBars
             WindowInsetsCompat.CONSUMED
+        }
+        lifecycleScope.launch {
+            val horizontalSpacing =
+                resources.getDimensionPixelOffset(R.dimen.horizontal_edge_spacing)
+            val verticalSpacing = resources.getDimensionPixelOffset(R.dimen.vertical_edge_spacing)
+            combine(
+                systemBarsInsetsFlow,
+                lifecycle.currentStateFlow
+            ) { systemBars, lifecycleState -> systemBars to lifecycleState }
+                .filter {
+                    it.second == Lifecycle.State.RESUMED
+                }
+                .collectLatest { (insets, _) ->
+                    binding.appbar.updatePadding(top = insets.top)
+                    binding.recyclerView.updatePadding(
+                        left = insets.left + horizontalSpacing,
+                        right = insets.right + horizontalSpacing,
+                        bottom = insets.bottom + verticalSpacing,
+                    )
+                }
         }
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         when {
