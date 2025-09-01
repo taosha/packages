@@ -9,11 +9,15 @@ import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import packages.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -46,17 +50,29 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
+        val horizontalSpacing = resources.getDimensionPixelOffset(R.dimen.horizontal_edge_spacing)
+        val verticalSpacing = resources.getDimensionPixelOffset(R.dimen.vertical_edge_spacing)
+        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.appbar.updatePadding(top = systemBars.top)
+            binding.recyclerView.updatePadding(
+                left = systemBars.left + horizontalSpacing,
+                right = systemBars.right + horizontalSpacing,
+                bottom = systemBars.bottom + verticalSpacing,
+            )
+            WindowInsetsCompat.CONSUMED
+        }
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.R -> {
-                insetsController?.isAppearanceLightStatusBars =
+                insetsController.isAppearanceLightStatusBars =
                     !resources.configuration.isNightModeActive
                 window.statusBarColor =
                     getColorFromAttr(com.google.android.material.R.attr.colorOnPrimary)
             }
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
-                insetsController?.isAppearanceLightStatusBars = !isNightMode()
+                insetsController.isAppearanceLightStatusBars = !isNightMode()
                 window.statusBarColor =
                     getColorFromAttr(com.google.android.material.R.attr.colorOnPrimary)
             }
