@@ -1,8 +1,8 @@
-import com.android.build.api.dsl.ApkSigningConfig
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinCompose)
     alias(libs.plugins.androidApplication)
 }
 
@@ -14,21 +14,11 @@ fun File.normalizeUserHome(): File {
     }
 }
 
-infix fun ApkSigningConfig.load(properties: File) {
-    val conf = properties.normalizeUserHome()
-    val props = conf.reader().use { Properties().apply { load(it) } }
-    storeFile =
-        conf.resolveSibling(File(props.getProperty("signing.store.file")).normalizeUserHome())
-    storePassword = props.getProperty("signing.store.password")
-    keyAlias = props.getProperty("signing.key.alias")
-    keyPassword = props.getProperty("signing.key.password")
-}
-
 android {
     namespace = "packages"
     compileSdk = 36
-    viewBinding {
-        enable = true
+    buildFeatures {
+        compose = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -44,12 +34,39 @@ android {
     }
     signingConfigs {
         create("release") {
-            load(file(project.properties["signing.config"] ?: "signing.properties"))
+            val signingConfigFile =
+                rootProject.file("local.properties")
+                    .takeIf { it.exists() }
+                    ?.let {
+                        it.resolveSibling(
+                            File(Properties().apply {
+                                load(it.inputStream())
+                            }.getProperty("signing.config")).normalizeUserHome()
+                        )
+                    }
+            when {
+                signingConfigFile?.exists() == true -> {
+                    val signingProps = Properties()
+                    signingProps.load(signingConfigFile.inputStream())
+                    storeFile =
+                        signingConfigFile.resolveSibling(signingProps.getProperty("signing.store.file"))
+                    storePassword = signingProps.getProperty("signing.store.password")
+                    keyAlias = signingProps.getProperty("signing.key.alias")
+                    keyPassword = signingProps.getProperty("signing.key.password")
+                }
+                else -> {
+                    // Use debug keystore for development
+                    storeFile = file("${System.getProperty("user.home")}/.android/debug.keystore")
+                    storePassword = "android"
+                    keyAlias = "androiddebugkey"
+                    keyPassword = "android"
+                }
+            }
         }
     }
     defaultConfig {
         applicationId = "io.github.taosha.packages"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 36
         versionCode = 19
         versionName = "1.6.1"
@@ -64,11 +81,17 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles.add(getDefaultProguardFile("proguard-android-optimize.txt"))
-            proguardFiles.add(File("proguard-rules.pro"))
-            signingConfig = signingConfigs["release"]
+            proguardFiles.add(file("proguard-rules.pro"))
+            val releaseConfig = signingConfigs.findByName("release")
+            if (releaseConfig?.storeFile != null) {
+                signingConfig = releaseConfig
+            }
         }
         debug {
-            signingConfig = signingConfigs["release"]
+            val releaseConfig = signingConfigs.findByName("release")
+            if (releaseConfig?.storeFile != null) {
+                signingConfig = releaseConfig
+            }
         }
     }
     namespace = "packages"
@@ -78,7 +101,23 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
+
+    // Compose
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
+
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
 }
